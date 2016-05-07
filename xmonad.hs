@@ -25,7 +25,7 @@ import qualified Data.Map        as M
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
-myTerminal = "/usr/bin/gnome-terminal"
+myTerminal = "urxvt"
 
 -- The command to lock the screen or show the screensaver.
 myScreensaver = "/usr/bin/gnome-screensaver-command --lock"
@@ -63,19 +63,19 @@ myWorkspaces = ["1:term","2:web","3:code","4:vm","5:media"] ++ map show [6..9]
 -- To match on the WM_NAME, you can use 'title' in the same way that
 -- 'className' and 'resource' are used below.
 --
-myManageHook = composeAll
-    [ className =? "Chromium"       --> doShift "2:web"
-    , className =? "Google-chrome"  --> doShift "2:web"
-    , resource  =? "desktop_window" --> doIgnore
-    , className =? "Galculator"     --> doFloat
-    , className =? "Steam"          --> doFloat
-    , className =? "Gimp"           --> doFloat
-    , resource  =? "gpicview"       --> doFloat
-    , className =? "MPlayer"        --> doFloat
-    , className =? "VirtualBox"     --> doShift "4:vm"
-    , className =? "Xchat"          --> doShift "5:media"
-    , className =? "stalonetray"    --> doIgnore
-    , isFullscreen --> (doF W.focusDown <+> doFullFloat)]
+-- myManageHook = composeAll
+--     [ className =? "Chromium"       --> doShift "2:web"
+--     , className =? "Google-chrome"  --> doShift "2:web"
+--     , resource  =? "desktop_window" --> doIgnore
+--     , className =? "Galculator"     --> doFloat
+--     , className =? "Steam"          --> doFloat
+--     , className =? "Gimp"           --> doFloat
+--     , resource  =? "gpicview"       --> doFloat
+--     , className =? "MPlayer"        --> doFloat
+--     , className =? "VirtualBox"     --> doShift "4:vm"
+--     , className =? "Xchat"          --> doShift "5:media"
+--     , className =? "stalonetray"    --> doIgnore
+--     , isFullscreen --> (doF W.focusDown <+> doFullFloat)]
 
 
 ------------------------------------------------------------------------
@@ -133,7 +133,7 @@ myBorderWidth = 1
 -- ("right alt"), which does not conflict with emacs keybindings. The
 -- "windows key" is usually mod4Mask.
 --
-myModMask = mod1Mask
+myModMask = mod4Mask
 
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   ----------------------------------------------------------------------
@@ -208,10 +208,6 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   -- Resize viewed windows to the correct size.
   , ((modMask, xK_n),
      refresh)
-
-  -- Move focus to the next window.
-  , ((modMask, xK_Tab),
-     windows W.focusDown)
 
   -- Move focus to the next window.
   , ((modMask, xK_j),
@@ -343,8 +339,8 @@ main = do
           , ppCurrent = xmobarColor xmobarCurrentWorkspaceColor ""
           , ppSep = "   "
       }
-      , manageHook = manageDocks <+> myManageHook
-      , startupHook = setWMName "LG3D"
+      -- , manageHook = manageDocks <+> myManageHook
+      -- , startupHook = setWMName "LG3D"
   }
 
 
@@ -372,6 +368,6 @@ defaults = defaultConfig {
 
     -- hooks, layouts
     layoutHook         = smartBorders $ myLayout,
-    manageHook         = myManageHook,
+    -- manageHook         = myManageHook,
     startupHook        = myStartupHook
 }
