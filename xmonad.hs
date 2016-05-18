@@ -16,6 +16,7 @@ import XMonad.Layout.Tabbed
 import XMonad.Layout.ThreeColumns
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig(additionalKeys)
+import Graphics.X11.ExtraTypes.XF86
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
@@ -28,7 +29,6 @@ import qualified Data.Map        as M
 myTerminal = "urxvt"
 
 -- The command to lock the screen or show the screensaver.
-myScreensaver = "/usr/bin/gnome-screensaver-command --lock"
 
 -- The command to take a selective screenshot, where you select
 -- what you'd like to capture on the screen.
@@ -145,8 +145,8 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
      spawn $ XMonad.terminal conf)
 
   -- Lock the screen using command specified by myScreensaver.
-  , ((modMask .|. controlMask, xK_l),
-     spawn myScreensaver)
+  -- , ((modMask .|. controlMask, xK_l),
+  --    spawn myScreensaver)
 
   -- Spawn the launcher using command specified by myLauncher.
   -- Use this to launch programs without a key binding.
@@ -165,6 +165,10 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   , ((modMask .|. controlMask, xK_m),
      spawn "amixer -q set Master toggle")
 
+  -- Mute volume.
+  , ((0, xF86XK_AudioMute),
+     spawn "amixer -q set Master toggle")
+
   -- Decrease volume.
   , ((modMask .|. controlMask, xK_j),
      spawn "amixer -q set Master 10%-")
@@ -173,21 +177,13 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   , ((modMask .|. controlMask, xK_k),
      spawn "amixer -q set Master 10%+")
 
-  -- Audio previous.
-  , ((0, 0x1008FF16),
-     spawn "")
+  -- Decrease volume.
+  , ((0, xF86XK_AudioLowerVolume),
+     spawn "amixer -q set Master 10%-")
 
-  -- Play/pause.
-  , ((0, 0x1008FF14),
-     spawn "")
-
-  -- Audio next.
-  , ((0, 0x1008FF17),
-     spawn "")
-
-  -- Eject CD tray.
-  , ((0, 0x1008FF2C),
-     spawn "eject -T")
+  -- Increase volume.
+  , ((0, xF86XK_AudioRaiseVolume),
+     spawn "amixer -q set Master 10%+")
 
   --------------------------------------------------------------------
   -- "Standard" xmonad key bindings
@@ -276,7 +272,8 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
   -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
   [((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
-      | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
+      -- | (key, sc) <- zip [xK_r, xK_e, xK_w] [0..]
+      | (key, sc) <- zip [ xK_e, xK_w] [0..]
       , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 
 
